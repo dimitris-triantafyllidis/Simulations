@@ -368,8 +368,8 @@ int main()
     Array<Array<double, 2>, 2> sols(n_sols, n_sols);
     sols[n_sols - 1, 0] = ic;
 
-    double time_point = ti;
-    int64_t    time_point_idx = 0;
+    double  time_point = ti;
+    int64_t time_point_idx = 0;
 
     auto solver_time_start = std::chrono::steady_clock::now();
 
@@ -380,7 +380,7 @@ int main()
 
         std::print (
             "Time point {:>8} of {:>10} | t = {:>14.5e} | sol norm: {:.16e} | solver_time {:10.3f} s\n",
-            time_point_idx, nt, time_point, norm_L2(sols[n_sols - 1, 0]), solver_runtime_s
+            time_point_idx, nt - 1, time_point, norm_L2(sols[n_sols - 1, 0]), solver_runtime_s
         );
 
         store_snapshot (

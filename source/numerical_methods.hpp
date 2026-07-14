@@ -357,6 +357,9 @@ void dft(A &data, uint32_t log2_n, bool inverse)
 
 void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
 {
+
+    AsyncTaskQueuePool thread_pool(8);
+
     if (
         data.size() == 0 ||
         !std::has_single_bit(uint64_t(data.extents(0))) ||
@@ -373,16 +376,30 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
 
     for(int64_t i = 0; i < n_0; i++)
     {
-        auto row_view = make_slice_view<1, {1}>(data, {i, 0});
-        dft(row_view, log2_n_1, inverse);
+        thread_pool.enqueue_task (
+            [&, i]() {
+                auto row_view = make_slice_view<1, {1}>(data, {i, 0});
+                dft(row_view, log2_n_1, inverse);
+            }
+        );
     }
+
+    thread_pool.stop();
+
     data = transposed(data);
 
     for(int64_t i = 0; i < n_1; i++)
     {
-        auto row_view = make_slice_view<1, {1}>(data, {i, 0});
-        dft(row_view, log2_n_0, inverse);
+        thread_pool.enqueue_task (
+            [&, i]() {
+                auto row_view = make_slice_view<1, {1}>(data, {i, 0});
+                dft(row_view, log2_n_0, inverse);
+            }
+        );
     }
+
+    thread_pool.stop();
+
     data = transposed(data);
 }
 

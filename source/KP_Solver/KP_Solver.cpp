@@ -6,7 +6,10 @@
 #include <chrono>
 
 #include <complex>
+
+#define ARRAY_IMPLEMENTATION
 #include <Array.hpp>
+
 #include "../numerical_methods.hpp"
 
 //******************************************************************************

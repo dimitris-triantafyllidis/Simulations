@@ -139,8 +139,8 @@ auto RK4_f (
 
     auto u_t = u;
 
-    for(int64_t i = ny / 2 - (ny / 7); i < ny / 2 + (ny / 7); i++)
-    for(int64_t j = nx / 2 - (nx / 7); j < nx / 2 + (nx / 7); j++)
+    for(int64_t i = ny / 2 - (ny / 6); i < ny / 2 + (ny / 6); i++)
+    for(int64_t j = nx / 2 - (nx / 6); j < nx / 2 + (nx / 6); j++)
         u_t[i, j] = std::complex<double>{0.0, 0.0};
 
     dft_2d(u_t, true);
@@ -152,21 +152,17 @@ auto RK4_f (
     double delta_kx = 2.0 * pi / (nx * hx);
     double delta_ky = 2.0 * pi / (ny * hy);
     double kx = 0.0;
-    double ky = 0.0;
 
     for ( int64_t i = 0; i < ny; i++ )
     {
         for ( int64_t j = 0; j < nx; j++ )
         {
+            kx = j < nx / 2 ?
+                j * delta_kx :
+                j * delta_kx - 2 * pi / hx;
+
             u_t[i, j] *= -3.0 * kx * std::complex<double>{0.0, 1.0};
-            kx += delta_kx;
-            if(j == nx / 2)
-                kx -= 2 * pi / (hx);
         }
-        kx = 0.0;
-        ky += delta_ky;
-        if(i == ny / 2)
-            ky -= 2 * pi / (hy);
     }
 
     return u_t;
@@ -211,46 +207,46 @@ Array<double, 2> solve_KP (
 
         for ( int64_t i = 0; i < ny; i++ )
         {
-            kx = 0.0;
+            ky = i < ny / 2 ?
+                i * delta_ky :
+                i * delta_ky - 2 * pi / hy;
+
             for ( int64_t j = 0; j < nx; j++ )
             {
+                kx = j < nx / 2 ?
+                    j * delta_kx :
+                    j * delta_kx - 2 * pi / hx;
+
                 std::complex<double> z;
                 if ( kx != 0.0 )
                     z = std::complex<double>{0.0, 0.5 * (kx * kx * kx - 3 * sigma_sq * (ky * ky / kx)) * ht};
                 else
                     z = std::complex<double>{0.0, 0.5 * kx * kx * kx * ht};
                 RK4_state.y[i, j] *= exp(z);
-
-                kx += delta_kx;
-                if ( j == nx / 2 )
-                    kx -= 2 * pi / hx;
             }
-            ky += delta_ky;
-            if(i == ny / 2)
-                ky -= 2 * pi / hy;
         }
 
         ode_ivp_RK4(RK4_f, RK4_state, RK4_state.t + ht, 1);
 
         for ( int64_t i = 0; i < ny; i++ )
         {
-            kx = 0.0;
+            ky = i < ny / 2 ?
+                i * delta_ky :
+                i * delta_ky - 2 * pi / hy;
+
             for ( int64_t j = 0; j < nx; j++ )
             {
+                kx = j < nx / 2 ?
+                    j * delta_kx :
+                    j * delta_kx - 2 * pi / hx;
+
                 std::complex<double> z;
                 if(kx != 0.0)
                     z = std::complex<double>{0.0, 0.5 * (kx * kx * kx - 3 * sigma_sq * (ky * ky / kx)) * ht};
                 else
                     z = std::complex<double>{0.0, 0.5 * kx * kx * kx * ht};
                 RK4_state.y[i, j] *= exp(z);
-
-                kx += delta_kx;
-                if(j == nx / 2)
-                    kx -= 2 * pi / (hx);
             }
-            ky += delta_ky;
-            if(i == ny / 2)
-                ky -= 2 * pi / (hy);
         }
 
         RK4_state.t += ht;

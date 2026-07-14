@@ -355,10 +355,17 @@ void dft(A &data, uint32_t log2_n, bool inverse)
             data[i].imag(-data[i].imag());
 }
 
+template <typename T>
+void wait_all(std::vector<std::future<T>> &futures)
+{
+    for (auto &future : futures)
+    {
+        future.get();
+    }
+}
+
 void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
 {
-
-    AsyncTaskQueuePool thread_pool(8);
 
     if (
         data.size() == 0 ||
@@ -374,31 +381,41 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
     int64_t n_0 = data.extents(0);
     int64_t n_1 = data.extents(1);
 
+    AsyncTaskQueuePool thread_pool(8);
+
+    std::vector<std::future<void>> futures;
+    futures.reserve(std::max(n_0, n_1));
+
     for(int64_t i = 0; i < n_0; i++)
     {
-        thread_pool.enqueue_task (
-            [&, i]() {
-                auto row_view = make_slice_view<1, {1}>(data, {i, 0});
-                dft(row_view, log2_n_1, inverse);
-            }
+        futures.push_back (
+            thread_pool.enqueue_task (
+                [&, i]() {
+                    auto row_view = make_slice_view<1, {1}>(data, {i, 0});
+                    dft(row_view, log2_n_1, inverse);
+                }
+            )
         );
     }
 
-    thread_pool.stop();
+    wait_all(futures);
+    futures.clear();
 
     data = transposed(data);
 
     for(int64_t i = 0; i < n_1; i++)
     {
-        thread_pool.enqueue_task (
-            [&, i]() {
-                auto row_view = make_slice_view<1, {1}>(data, {i, 0});
-                dft(row_view, log2_n_0, inverse);
-            }
+        futures.push_back (
+            thread_pool.enqueue_task (
+                [&, i]() {
+                    auto row_view = make_slice_view<1, {1}>(data, {i, 0});
+                    dft(row_view, log2_n_0, inverse);
+                }
+            )
         );
     }
 
-    thread_pool.stop();
+    wait_all(futures);
 
     data = transposed(data);
 }

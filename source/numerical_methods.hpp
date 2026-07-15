@@ -265,10 +265,10 @@ void butterflies(A &data, int64_t index, int64_t log2_n, int64_t li, int64_t lf)
         {
             for(int64_t j = 0; j < n; j += 2 * stride)
                 butterfly_radix_2(data, index + j + k, stride, w);
-            if(k % 8 == 0)
-              w = exp(std::complex<double>{0.0, -2.0 * pi * (k + 1) / (1 << i)});
+            if(k % 16 == 0)
+                w = exp(std::complex<double>{0.0, -2.0 * pi * (k + 1) / (1 << i)});
             else
-              w *= w_lut[i];
+                w *= w_lut[i];
         }
     }
 }

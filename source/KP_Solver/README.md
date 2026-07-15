@@ -13,7 +13,7 @@ $$
 The Fourier transform with respect to $x$ is:
 
 $$
-    \frac{\partial{\mathcal{F}_{x}(u)}}{\partial{t}}=-3ik_x\mathcal{F}_{x}\left(u^2\right)+ik_x^3\mathcal{F}_{x}(u) - 3\sigma^2\left(\frac{\mathcal{F}_x(u_{yy})}{ik_x}+\pi\mathcal{F_x(u_{yy})(0)\delta(k_x)}\right),
+    \frac{\partial{\mathcal{F}_{x}(u)}}{\partial{t}}=-3ik_x\mathcal{F}_{x}\left(u^2\right)+ik_x^3\mathcal{F}_{x}(u) - 3\sigma^2\left(\frac{\mathcal{F}_x(u_{yy})}{ik_x}+\pi\mathcal{F}_x(u_{yy})(0)\delta(k_x)\right),
 $$
 
 where we have to require that $\mathcal{F}_x(u_{yy})(0, y) = 0$:

@@ -7,43 +7,55 @@ $$
 or, for $u$ approaching zero sufficiently quickly at infinity,
 
 $$
-u_{t}=-3\frac{\partial{(u^{2})}}{\partial{x}}-u_{xxx}-3\sigma^{2}\int_{-\infty}^{x} u_{yy}\, dx,
+u_{t}=-3\frac{\partial{(u^{2})}}{\partial{x}}-u_{xxx}-3\sigma^{2}\int_{-\infty}^{x} u_{yy}\, dx.
 $$
 
 The Fourier transform with respect to $x$ is:
 
 $$
-    \frac{\partial{\mathcal{F}_{x}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{x}\left(u^{2}\right)+ik_{x}^{3}\mathcal{F}_{x}(u) - 3\sigma^{2}\left(\frac{\mathcal{F}_{x}(u_{yy})}{ik_{x}}+\pi\mathcal{F}_{x}(u_{yy})(0, y)\delta(k_{x})\right),
+\frac{\partial{\mathcal{F}_{x}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{x}\left(u^{2}\right)+ik_{x}^{3}\mathcal{F}_{x}(u) - 3\sigma^{2}\left(\frac{\mathcal{F}_{x}(u_{yy})}{ik_{x}}+\pi\mathcal{F}_{x}(u_{yy})(0, y)\delta(k_{x})\right),
 $$
 
-where we have to require that $\mathcal{F}_{x}(u_{yy})(0, y) = 0$:
+where we have to require that
 
 $$
-    \frac{\partial{\mathcal{F}_{x}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{x}\left(u^{2}\right)+ik_{x}^{3}\mathcal{F}_{x}(u) - 3\sigma^{2}\frac{\mathcal{F}_{x}(u_{yy})}{ik_{x}},
+\mathcal{F}_{x}(u_{yy})(0, y) = 0.
+$$
+
+Therefore,
+
+$$
+\frac{\partial{\mathcal{F}_{x}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{x}\left(u^{2}\right)+ik_{x}^{3}\mathcal{F}_{x}(u) - 3\sigma^{2}\frac{\mathcal{F}_{x}(u_{yy})}{ik_{x}},
 $$
 
 and taking the Fourier transform with respect to $y$, we have:
 
 $$
-    \frac{\partial{\mathcal{F}_{xy}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{xy}\left(u^{2}\right)+\left(ik_{x}^{3} - 3\sigma^{2}\frac{ik_{y}^{2}}{k_{x}}\right)\mathcal{F}_{xy}(u),
+\frac{\partial{\mathcal{F}_{xy}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{xy}\left(u^{2}\right)+\left(ik_{x}^{3} - 3\sigma^{2}\frac{ik_{y}^{2}}{k_{x}}\right)\mathcal{F}_{xy}(u).
 $$
 
-and rewriting the middle term in terms of $u$ to facilitate a time-stepping numerical solution,
+Rewriting the middle term in terms of $u$ to facilitate a time-stepping numerical solution,
 
 $$
-    \frac{\partial{\mathcal{F}_{xy}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{xy}\left(\left(\mathcal{F}^{-1}_{xy}\left(\mathcal{F}_{xy}\left(u\right)\right)\right)^{2}\right)+\left(ik_{x}^{3}-3\sigma^{2}\frac{ik_{y}^{2}}{k_{x}}\right)\mathcal{F}_{xy}(u).
+\frac{\partial{\mathcal{F}_{xy}(u)}}{\partial{t}}=-3ik_{x}\mathcal{F}_{xy}\left(\left(\mathcal{F}^{-1}_{xy}\left(\mathcal{F}_{xy}\left(u\right)\right)\right)^{2}\right)+\left(ik_{x}^{3}-3\sigma^{2}\frac{ik_{y}^{2}}{k_{x}}\right)\mathcal{F}_{xy}(u).
 $$
 
-Setting $\hat{u}\equiv\mathcal{F}_{xy}(u)$, the evolution operator for the (exactly solvable) dispersive subproblem is defined by:
+Setting
 
 $$
-\Phi_{L}(\hat{u}, \Delta t)=\hat{u}e^{\left(ik_{x}^{3}-3\sigma^{2}\frac{ik_{y}^{2}}{k_{x}}\right)\Delta t}
+\hat{u}\equiv\mathcal{F}_{xy}(u),
 $$
 
-For the nonlinear subproblem:
+the evolution operator for the (exactly solvable) dispersive subproblem is defined by:
 
 $$
-\Phi_{N}\left(\hat{u}, \Delta t\right) \approx RK4\left(-3ik_{x}\mathcal{F}_{xy}\left(\mathcal{F}^{-1}_{xy}\left(\hat{u}\right)^{2}\right), \hat{u}, \Delta t\right)
+\Phi_{L}(\hat{u}, \Delta t)=\hat{u}e^{\left(ik_{x}^{3}-3\sigma^{2}\frac{ik_{y}^{2}}{k_{x}}\right)\Delta t}.
+$$
+
+For the nonlinear subproblem,
+
+$$
+\Phi_{N}\left(\hat{u}, \Delta t\right) \approx RK4\left(-3ik_{x}\mathcal{F}_{xy}\left(\mathcal{F}^{-1}_{xy}\left(\hat{u}\right)^{2}\right), \hat{u}, \Delta t\right).
 $$
 
 The numerical scheme for one full step with Strang operator splitting is:

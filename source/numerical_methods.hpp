@@ -381,7 +381,7 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
     int64_t n_0 = data.extents(0);
     int64_t n_1 = data.extents(1);
 
-    AsyncTaskQueuePool thread_pool(8);
+    SingleProducerAsyncTaskQueuePool thread_pool(8);
 
     std::vector<std::future<void>> futures;
     futures.reserve(std::max(n_0, n_1));
@@ -401,7 +401,7 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
     wait_all(futures);
     futures.clear();
 
-    data = transposed(data);
+    data = transposed(data, 1);
 
     for(int64_t i = 0; i < n_1; i++)
     {
@@ -417,7 +417,7 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
 
     wait_all(futures);
 
-    data = transposed(data);
+    data = transposed(data, 1);
 }
 
 //******************************************************************************

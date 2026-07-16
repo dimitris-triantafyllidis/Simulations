@@ -20,11 +20,26 @@ FetchContent_Declare (
 
 FetchContent_MakeAvailable(Array)
 
+# KP_Solver
+
 add_executable ( KP_Solver
     ${CMAKE_CURRENT_SOURCE_DIR}/source/KP_Solver/KP_Solver.cpp
 )
 
 target_link_libraries ( KP_Solver
+    PRIVATE
+        Array::array
+)
+
+# CNN
+
+add_executable ( CNN
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/CNN/cnn_example.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/CNN/cnn_core.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/CNN/cnn_utilities.cpp
+)
+
+target_link_libraries ( CNN
     PRIVATE
         Array::array
 )

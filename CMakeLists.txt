@@ -43,3 +43,15 @@ target_link_libraries ( CNN
     PRIVATE
         Array::array
 )
+
+# DFT_Solver
+
+add_executable ( DFT_Solver
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/DFT_Solver/DFT_Solver.cpp
+)
+
+target_link_libraries ( DFT_Solver
+    PRIVATE
+        Array::array
+)
+

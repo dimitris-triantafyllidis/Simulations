@@ -401,7 +401,7 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
     wait_all(futures);
     futures.clear();
 
-    data = transposed(data, 1);
+    data = transposed(data);
 
     for(int64_t i = 0; i < n_1; i++)
     {
@@ -417,7 +417,7 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
 
     wait_all(futures);
 
-    data = transposed(data, 1);
+    data = transposed(data);
 }
 
 //******************************************************************************
@@ -465,7 +465,7 @@ void ode_ivp_RK4 (
         state.k3 = f(state.t + S(0.5) * h, S(0.5) * state.k2 + state.y, state.auxiliary_data) * h;
         state.k4 = f(state.t + S(1.0) * h,          state.k3 + state.y, state.auxiliary_data) * h;
 
-        state.y += 1.0 / 6.0 * (2.0 * (state.k2 + state.k3) + state.k1 + state.k4);
+        state.y = state.y + 1.0 / 6.0 * (2.0 * (state.k2 + state.k3) + state.k1 + state.k4);
 
         state.t = tf - h * (n_steps - i);
     }

@@ -7,7 +7,7 @@ $$
 or, for $u$ approaching zero sufficiently quickly at infinity,
 
 $$
-u_{t}=-3\frac{\partial{(u^{2})}}{\partial{x}}-u_{xxx}-3\sigma^{2}\int_{-\infty}^{x} u_{yy}\, dx.
+u_{t}=-3\frac{\partial{(u^{2})}}{\partial{x}}-u_{xxx}-3\sigma^{2}\int_{-\infty}^{x} u_{yy}dx.
 $$
 
 The Fourier transform with respect to $x$ is:

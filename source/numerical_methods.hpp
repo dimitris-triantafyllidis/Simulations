@@ -1,6 +1,8 @@
 #ifndef NUMERICAL_METHODS_HPP
 #define NUMERICAL_METHODS_HPP
 
+#include <algorithm>
+
 #include "Array.hpp"
 
 //******************************************************************************
@@ -401,7 +403,7 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
     wait_all(futures);
     futures.clear();
 
-    data = transposed(data);
+    data = transposed(data, std::min({int64_t(16), n_0, n_1}));
 
     for(int64_t i = 0; i < n_1; i++)
     {
@@ -417,7 +419,7 @@ void dft_2d(Array<std::complex<double>, 2> &data, bool inverse)
 
     wait_all(futures);
 
-    data = transposed(data);
+    data = transposed(data, std::min({int64_t(16), n_0, n_1}));
 }
 
 //******************************************************************************
